@@ -27,6 +27,7 @@ public class ClientHandler implements Runnable {
 
             while ((message = in.readLine()) != null) {
                 System.out.println("Message from " + clientIp + ": " + message);
+                state.addMessage(clientIp + ": " + message);
 
                 if (message.equals("PING")) {
                     out.println("PONG");
