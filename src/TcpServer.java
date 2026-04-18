@@ -9,11 +9,11 @@ public class TcpServer {
     private final int maxClients;
     private final ServerState state;
 
-    public TcpServer(String serverIp, int serverPort, int maxClients) {
+    public TcpServer(String serverIp, int serverPort, int maxClients, ServerState state) {
         this.serverIp = serverIp;
         this.serverPort = serverPort;
         this.maxClients = maxClients;
-        this.state = new ServerState();
+        this.state = state;
     }
 
     public String getServerIp() {

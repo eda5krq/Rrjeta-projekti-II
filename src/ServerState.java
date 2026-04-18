@@ -29,4 +29,8 @@ public class ServerState {
     public synchronized int getMessageCount() {
         return messages.size();
     }
+
+    public synchronized Set<String> getActiveClients() {
+        return activeClients;
+    }
 }
