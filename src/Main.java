@@ -4,13 +4,17 @@ public class Main {
         int serverPort = 9000;
         int maxClients = 4;
 
-        TcpServer server = new TcpServer(serverIp, serverPort, maxClients);
+        ServerState state = new ServerState();
+
+        TcpServer server = new TcpServer(serverIp, serverPort, maxClients, state);
+        SimpleHttpServer httpServer = new SimpleHttpServer(8080, state);
 
         System.out.println("Server configuration is ready.");
         System.out.println("IP: " + server.getServerIp());
         System.out.println("Port: " + server.getServerPort());
         System.out.println("Max clients: " + server.getMaxClients());
 
-        server.start();
+        new Thread(() -> server.start()).start();
+        httpServer.start();
     }
 }

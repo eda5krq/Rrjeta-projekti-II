@@ -58,7 +58,8 @@ public class ClientHandler implements Runnable {
                         out.println("File not found");
                     } else {
                         BufferedReader fileReader = new BufferedReader(
-                                new InputStreamReader(new java.io.FileInputStream(file)));
+                                new InputStreamReader(new java.io.FileInputStream(file))
+                        );
 
                         String line;
                         while ((line = fileReader.readLine()) != null) {
