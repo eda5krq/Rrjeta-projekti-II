@@ -1,0 +1,92 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.SocketTimeoutException;
+
+public class ClientHandler implements Runnable {
+
+    private Socket socket;
+    private ServerState state;
+
+    public ClientHandler(Socket socket, ServerState state) {
+        this.socket = socket;
+        this.state = state;
+    }
+
+    public void run() {
+        String clientIp = socket.getInetAddress().getHostAddress();
+        state.addClient(clientIp);
+
+        try {
+            socket.setSoTimeout(30000);
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+
+            out.println("You are connected to the server");
+
+            String message;
+
+            while ((message = in.readLine()) != null) {
+                System.out.println("Message from " + clientIp + ": " + message);
+                state.addMessage(clientIp + ": " + message);
+
+                if (message.equals("PING")) {
+                    out.println("PONG");
+                } else if (message.equals("HELLO")) {
+                    out.println("Hello client");
+                } else if (message.equals("BYE")) {
+                    out.println("Goodbye");
+                    break;
+                } else if (message.equals("LIST")) {
+                    java.io.File folder = new java.io.File("shared");
+                    java.io.File[] files = folder.listFiles();
+
+                    if (files == null || files.length == 0) {
+                        out.println("No files found");
+                    } else {
+                        for (java.io.File file : files) {
+                            out.println(file.getName());
+                        }
+                    }
+                } else if (message.startsWith("READ ")) {
+                    String fileName = message.substring(5);
+                    java.io.File file = new java.io.File("shared/" + fileName);
+
+                    if (!file.exists()) {
+                        out.println("File not found");
+                    } else {
+                        BufferedReader fileReader = new BufferedReader(
+                                new InputStreamReader(new java.io.FileInputStream(file))
+                        );
+
+                        String line;
+                        while ((line = fileReader.readLine()) != null) {
+                            out.println(line);
+                        }
+
+                        fileReader.close();
+                    }
+                } else {
+                    out.println("Server received: " + message);
+                }
+            }
+
+            socket.close();
+
+        } catch (SocketTimeoutException e) {
+            System.out.println("Client timeout: " + clientIp);
+            try {
+                socket.close();
+            } catch (Exception ex) {
+                System.out.println("Error closing socket");
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+
+        state.removeClient(clientIp);
+        System.out.println("Client disconnected: " + clientIp);
+    }
+}
