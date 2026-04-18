@@ -10,5 +10,7 @@ public class Main {
         System.out.println("IP: " + server.getServerIp());
         System.out.println("Port: " + server.getServerPort());
         System.out.println("Max clients: " + server.getMaxClients());
+
+        server.start();
     }
 }
