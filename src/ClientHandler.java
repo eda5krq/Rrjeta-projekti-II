@@ -39,6 +39,34 @@ public class ClientHandler implements Runnable {
                 } else if (message.equals("BYE")) {
                     out.println("Goodbye");
                     break;
+                } else if (message.equals("LIST")) {
+                    java.io.File folder = new java.io.File("shared");
+                    java.io.File[] files = folder.listFiles();
+
+                    if (files == null || files.length == 0) {
+                        out.println("No files found");
+                    } else {
+                        for (java.io.File file : files) {
+                            out.println(file.getName());
+                        }
+                    }
+                } else if (message.startsWith("READ ")) {
+                    String fileName = message.substring(5);
+                    java.io.File file = new java.io.File("shared/" + fileName);
+
+                    if (!file.exists()) {
+                        out.println("File not found");
+                    } else {
+                        BufferedReader fileReader = new BufferedReader(
+                                new InputStreamReader(new java.io.FileInputStream(file)));
+
+                        String line;
+                        while ((line = fileReader.readLine()) != null) {
+                            out.println(line);
+                        }
+
+                        fileReader.close();
+                    }
                 } else {
                     out.println("Server received: " + message);
                 }
