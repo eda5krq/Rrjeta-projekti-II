@@ -25,7 +25,6 @@ public class ClientHandler implements Runnable {
             BufferedReader in  = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintWriter    out = new PrintWriter(socket.getOutputStream(), true)
         ) {
-            // FIX 1: Moved this inside the try block so the Exception is caught
             socket.setSoTimeout(300000);
 
             out.println("You are connected to the server");

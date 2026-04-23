@@ -1,6 +1,6 @@
 public class Main {
     public static void main(String[] args) {
-        String serverIp = "127.0.0.1";
+        String serverIp = "0.0.0.0";
         int serverPort = 9000;
         int maxClients = 4;
 

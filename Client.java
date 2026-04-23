@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class Client {
 
-    private static final String SERVER_IP = "10.1.2.204";
+    private static final String SERVER_IP = "172.16.108.235";
     private static final int SERVER_PORT = 9000;
 
     private String role; 
